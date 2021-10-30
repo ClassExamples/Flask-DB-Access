@@ -4,6 +4,7 @@ from collections import namedtuple
 
 Student = namedtuple("Student", "id name dob grade address parent_name")
 
+
 class StudentRecordHelper:
     db: MySQLConnection
 
@@ -20,6 +21,12 @@ class StudentRecordHelper:
             st = Student(*re)
             students.append(st)
         return students
+
+    def insert(self, student):
+        cur = self.db.cursor()
+        sql = "INSERT INTO student (name,dob,grade,address,parent_name) VALUES(%s,%s,%s,%s,%s)"
+        cur.execute(sql, student)
+        self.db.commit()
 
 def connect_db() -> MySQLConnection:
     return mysql.connector.connect(
